@@ -36,16 +36,31 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email=email, password=password, **extra_fields)
 
+class Motorista(models.Model):
+    GEN_MASCULINO = 'M'
+    GEN_FEMININO = 'F'
 
+    GEN = [
+        (GEN_FEMININO,'Feminino'),
+        (GEN_MASCULINO,'Masculino'),
+    ]
+    nome = models.CharField(max_length=50, verbose_name="Nome")
+    email = models.EmailField(verbose_name="Email")
+    cpf = models.CharField(max_length=11, verbose_name="CPF")
+    contato = models.CharField(max_length=15, verbose_name="Contato")
+    endereco = models.ForeignKey(Endereco, on_delete=models.PROTECT, verbose_name="Endereço")
+
+    def __str__(self):
+        return self.nome
+    
 
 class Empresa(AbstractUser):
     razao_social = models.CharField(max_length=50, unique=True)
     email = models.CharField(max_length=80, unique=True)
     endereco = models.ForeignKey(Endereco, on_delete=models.PROTECT, verbose_name="Endereço",null=True)
     cnpj = models.CharField(max_length=18, unique=True)
-   
+    motorista = models.ManyToManyField(Motorista,related_name='lista_empresas',blank=True,null=True)
     objects = CustomUserManager()
-
     USERNAME_FIELD = "cnpj"
     REQUIRED_FIELDS = ["razao_social", "email", "password"]
 
@@ -77,24 +92,7 @@ class Cliente(models.Model):
         return (f'{self.razao_social}')
     
 
-class Motorista(models.Model):
-    GEN_MASCULINO = 'M'
-    GEN_FEMININO = 'F'
 
-    GEN = [
-        (GEN_FEMININO,'Feminino'),
-        (GEN_MASCULINO,'Masculino'),
-    ]
-
-    nome = models.CharField(max_length=50, verbose_name="Nome")
-    email = models.EmailField(verbose_name="Email")
-    cpf = models.CharField(max_length=11, verbose_name="CPF")
-    contato = models.CharField(max_length=15, verbose_name="Contato")
-    endereco = models.ForeignKey(Endereco, on_delete=models.PROTECT, verbose_name="Endereço")
-
-    def __str__(self):
-        return self.nome
-    
 
 class NotaFiscal(models.Model):
     num_doc = models.CharField(max_length=50, verbose_name="Numero Documento")
