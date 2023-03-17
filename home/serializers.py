@@ -10,7 +10,7 @@ class EnderecoSerializer(serializers.ModelSerializer):
 
 class EmpresaSerializer(serializers.ModelSerializer):
     endereco = serializers.CharField(source='endereco.logradouro',read_only=True)
-    motorista = serializers.PrimaryKeyRelatedField(queryset=Motorista.objects.all(), many=True)
+    motorista = serializers.StringRelatedField(many=True, read_only=True)
     class Meta:
         model = Empresa
         fields = ['razao_social','email','endereco','cnpj','username','password','motorista']
@@ -21,12 +21,13 @@ class EmpresaRelatedField(serializers.RelatedField):
 
 class MotoristaSerializer(serializers.ModelSerializer):
     endereco = serializers.CharField(source='endereco.logradouro',read_only=True)
-    lista_empresas = serializers.PrimaryKeyRelatedField(queryset=Empresa.objects.filter(), many=True)
-    class Meta: 
+    lista_empresas = serializers.StringRelatedField(many=True, read_only=True)
+    class Meta:
         model = Motorista
-        fields = ['nome','email','cpf','contato','endereco','lista_empresas']
+        fields = '__all__'
 
 class NotaFiscalSerializer(serializers.ModelSerializer):
+    cliente = serializers.CharField(source='cliente.razao_social',read_only=True)
     class Meta:
         model = NotaFiscal
         fields = ['num_doc','itens','volume','cliente','redespacho','end_redespacho']

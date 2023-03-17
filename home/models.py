@@ -100,7 +100,7 @@ class NotaFiscal(models.Model):
     num_doc = models.CharField(max_length=50, verbose_name="Numero Documento")
     itens = models.IntegerField( verbose_name="Itens")
     volume = models.IntegerField(verbose_name="Volume")
-    cliente = models.ForeignKey(Cliente,on_delete=models.PROTECT,verbose_name="Cliente")
+    cliente = models.ForeignKey(Cliente,on_delete=models.PROTECT,related_name="cliente")
     redespacho = models.BooleanField()
     end_redespacho = models.ForeignKey(Endereco,null=True, on_delete=models.PROTECT, verbose_name="Endereço")
 
