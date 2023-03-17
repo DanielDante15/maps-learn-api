@@ -35,6 +35,8 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Superuser has to have is_superuser being True")
 
         return self.create_user(email=email, password=password, **extra_fields)
+    
+    
 
 class Motorista(models.Model):
     GEN_MASCULINO = 'M'
@@ -59,7 +61,7 @@ class Empresa(AbstractUser):
     email = models.CharField(max_length=80, unique=True)
     endereco = models.ForeignKey(Endereco, on_delete=models.PROTECT, verbose_name="Endereço",null=True)
     cnpj = models.CharField(max_length=18, unique=True)
-    motorista = models.ManyToManyField(Motorista,related_name='lista_empresas',blank=True,null=True)
+    motorista = models.ManyToManyField(Motorista,related_name='lista_empresas',blank=True)
     objects = CustomUserManager()
     USERNAME_FIELD = "cnpj"
     REQUIRED_FIELDS = ["razao_social", "email", "password"]

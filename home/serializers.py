@@ -15,9 +15,13 @@ class EmpresaSerializer(serializers.ModelSerializer):
         model = Empresa
         fields = ['razao_social','email','endereco','cnpj','username','password','motorista']
 
+class EmpresaRelatedField(serializers.RelatedField):
+    def to_internal_value(self, data):
+        return Empresa.objects.get(name=data)
 
 class MotoristaSerializer(serializers.ModelSerializer):
-    lista_empresas = EmpresaSerializer(many=True,read_only=True)
+    endereco = serializers.CharField(source='endereco.logradouro',read_only=True)
+    lista_empresas = serializers.PrimaryKeyRelatedField(queryset=Empresa.objects.filter(), many=True)
     class Meta: 
         model = Motorista
         fields = ['nome','email','cpf','contato','endereco','lista_empresas']
