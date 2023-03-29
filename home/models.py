@@ -85,7 +85,7 @@ class Cliente(models.Model):
     # bairro = models.CharField(max_length=30, verbose_name="Bairro")
     # localidade = models.CharField(max_length=20, verbose_name="Localidade")
     # uf = models.CharField(max_length=20, verbose_name="UF")
-    endereco = models.ForeignKey(Endereco, on_delete=models.PROTECT, verbose_name="Endereço")
+    # endereco = models.ForeignKey(Endereco, on_delete=models.PROTECT, verbose_name="Endereço")
     lat = models.FloatField(verbose_name='Latitude')
     lng = models.FloatField(verbose_name='Longitude')
 

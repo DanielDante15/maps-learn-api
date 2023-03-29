@@ -35,4 +35,4 @@ class NotaFiscalSerializer(serializers.ModelSerializer):
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
-        fields = ['id','razao_social','endereco','lat','lng']
+        fields = ['id','razao_social','lat','lng']
