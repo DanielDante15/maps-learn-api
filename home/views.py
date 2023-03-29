@@ -10,33 +10,6 @@ class EnderecoAPIView(ModelViewSet):
     queryset = Endereco.objects.all()
     serializer_class = EnderecoSerializer
 
-    @api_view(['GET','PUT','DELETE'])
-    def endereco_detail(request,pk):
-        try:
-            endereco = Endereco.objects.get(pk=pk)
-        except Endereco.DoesNotExist:
-            return response.Response(status=status.HTTP_404_NOT_FOUND)
-        
-        if request.method == 'GET':
-            serializer = EnderecoSerializer(endereco)
-            return response.Response(serializer.data)
-        elif request.method == 'PUT':
-            serializer = EnderecoSerializer(endereco,data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return response.Response(serializer.data)
-            return response.Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-        elif request.method == 'DELETE':
-            endereco.delete()
-            return response.Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-
-
-
-
-
 
 class MotoristaAPIView(ModelViewSet):
     queryset = Motorista.objects.all()
@@ -45,6 +18,11 @@ class MotoristaAPIView(ModelViewSet):
 class ClienteAPIView(ModelViewSet):
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        
+        print("*" * 50)
+        return super().destroy(request, *args, **kwargs)
 
 class NotaFiscalAPIView(ModelViewSet):
     queryset = NotaFiscal.objects.all()
