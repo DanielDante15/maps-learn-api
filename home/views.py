@@ -1,9 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import *
-from rest_framework.viewsets import *
-from rest_framework import response, permissions,status
-from rest_framework.decorators import api_view
-from rest_framework_nested import routers
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .serializers import *
 
 
@@ -16,14 +14,21 @@ class MotoristaAPIView(ModelViewSet):
     queryset = Motorista.objects.all()
     serializer_class = MotoristaSerializer
 
-class ClienteAPIView(RetrieveUpdateDestroyAPIView ):
+class ClienteAPIView(ModelViewSet):
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
+    
 
-    def destroy(self, request, *args, **kwargs):
+class Clientes2(APIView):
+
+    def get(request):
+        cliente = Cliente.objects.get()
+
         
-        print("*" * 50)
-        return super().destroy(request, *args, **kwargs)
+    def delete(request,pk=''):
+        cliente = Cliente.objects.get(id=pk)
+        cliente.delete()
+        return Response({'msg':'deletouu'})
 
 class NotaFiscalAPIView(ModelViewSet):
     queryset = NotaFiscal.objects.all()
