@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.viewsets import *
+from rest_framework.viewsets import *
 from rest_framework import response, permissions,status
 from rest_framework.decorators import api_view
 from rest_framework_nested import routers
@@ -15,7 +16,7 @@ class MotoristaAPIView(ModelViewSet):
     queryset = Motorista.objects.all()
     serializer_class = MotoristaSerializer
 
-class ClienteAPIView(ModelViewSet):
+class ClienteAPIView(RetrieveUpdateDestroyAPIView ):
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
 
