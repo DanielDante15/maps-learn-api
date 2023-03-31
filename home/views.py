@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.viewsets import *
+from rest_framework.status import *
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import *
@@ -19,16 +20,6 @@ class ClienteAPIView(ModelViewSet):
     serializer_class = ClienteSerializer
     
 
-class Clientes2(APIView):
-
-    def get(request):
-        cliente = Cliente.objects.get()
-
-        
-    def delete(request,pk=''):
-        cliente = Cliente.objects.get(id=pk)
-        cliente.delete()
-        return Response({'msg':'deletouu'})
 
 class NotaFiscalAPIView(ModelViewSet):
     queryset = NotaFiscal.objects.all()
