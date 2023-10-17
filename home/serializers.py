@@ -5,14 +5,14 @@ from .models import *
 class EnderecoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Endereco
-        fields = ['id','cep','logradouro','complemento','bairro','localidade','uf','num_casa']
+        fields = ['id','cep','logradouro','complemento','bairro','localidade','uf','num_casa','cliente','latitude','longitude']
 
 
 class EmpresaSerializer(serializers.ModelSerializer):
     endereco = serializers.CharField(source='endereco.logradouro',read_only=True)
     motorista = serializers.StringRelatedField(many=True, read_only=True)
     class Meta:
-        model = Empresa
+        model = Empresa 
         fields = ['razao_social','email','endereco','cnpj','username','password','motorista']
 
 class EmpresaRelatedField(serializers.RelatedField):
@@ -27,12 +27,18 @@ class MotoristaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class NotaFiscalSerializer(serializers.ModelSerializer):
-    cliente = serializers.CharField(source='cliente.razao_social',read_only=True)
     class Meta:
         model = NotaFiscal
-        fields = ['num_doc','itens','volume','cliente','redespacho','end_redespacho']
+        fields = ['num_doc','itens','volume','redespacho','end_redespacho']
 
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
-        fields = ['id','razao_social','lat','lng']
+        fields = ['id','razao_social']
+        read_only_fields = [('id')]
+
+class EntregaSerializer(serializers.ModelSerializer):
+   
+    class Meta:
+        model = Entrega
+        fields = ['id','endereco','cliente','nota_fiscal']

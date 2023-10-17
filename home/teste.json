@@ -1,0 +1,34 @@
+{'address_components': [
+      {'long_name': '86', 'short_name': '86', 'types': ['street_number'
+         ]
+      },
+      {'long_name': 'Rua Rafael Camisão', 'short_name': 'R. Rafael Camisão', 'types': ['route'
+         ]
+      },
+      {'long_name': 'Parque Ipiranga', 'short_name': 'Parque Ipiranga', 'types': ['political', 'sublocality', 'sublocality_level_1'
+         ]
+      },
+      {'long_name': 'Campinas', 'short_name': 'Campinas', 'types': ['administrative_area_level_2', 'political'
+         ]
+      },
+      {'long_name': 'São Paulo', 'short_name': 'SP', 'types': ['administrative_area_level_1', 'political'
+         ]
+      },
+      {'long_name': 'Brazil', 'short_name': 'BR', 'types': ['country', 'political'
+         ]
+      },
+      {'long_name': '13050-763', 'short_name': '13050-763', 'types': ['postal_code'
+         ]
+      }
+   ], 'formatted_address': 'R. Rafael Camisão,
+   86 - Parque Ipiranga, Campinas - SP,
+   13050-763, Brazil', 'geometry': {'bounds': {'northeast': {'lat': -22.949127, 'lng': -47.10944869999999
+         }, 'southwest': {'lat': -22.9493254, 'lng': -47.10967309999999
+         }
+      }, 'location': {'lat': -22.9492469, 'lng': -47.1095505
+      }, 'location_type': 'ROOFTOP', 'viewport': {'northeast': {'lat': -22.9478909697085, 'lng': -47.1081832197085
+         }, 'southwest': {'lat': -22.9505889302915, 'lng': -47.1108811802915
+         }
+      }
+   }
+}

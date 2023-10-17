@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'home',
     'rest_framework_simplejwt',
+    # 'google',
 ]
 
 MIDDLEWARE = [
@@ -116,6 +117,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+GOOGLE_API_KEY = 'AIzaSyAsYdGzyVfnKpkKIw5GJQzoaveZfswRlsU'
 
 
 # Static files (CSS, JavaScript, Images)
