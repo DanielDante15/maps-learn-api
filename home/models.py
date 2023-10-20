@@ -36,7 +36,7 @@ class Endereco(models.Model):
     bairro = models.CharField(max_length=50, verbose_name="Bairro")
     localidade = models.CharField(max_length=20, verbose_name="Localidade")
     uf = models.CharField(max_length=20, verbose_name="UF")
-    num_casa = models.SmallIntegerField(verbose_name="Número")
+    num_casa = models.CharField(max_length=6,verbose_name="Número",null=True,blank=True)
     latitude = models.FloatField(max_length=20,null=True,default=None)
     longitude = models.FloatField(max_length=20,null=True,default=None)
     cliente = models.ForeignKey(Cliente,verbose_name="Cliente",on_delete=models.CASCADE)
@@ -79,9 +79,6 @@ class Empresa(AbstractUser):
     def number(self):
         cnpj = self.cnpj.replace('.','').replace('/','').replace('-','')
         return cnpj
-
-
-
 
 
 class NotaFiscal(models.Model):
