@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 
+from rest_framework.permissions import IsAuthenticated
+
 import googlemaps
 import json
 from django.conf import settings
@@ -14,6 +16,7 @@ from django.conf import settings
 class EnderecoAPIView(ModelViewSet):
     queryset = Endereco.objects.all()
     serializer_class = EnderecoSerializer
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Endereco.objects.all()
