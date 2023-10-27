@@ -1,22 +1,15 @@
 {
    "address_components": [
       {
-         "long_name": "497",
-         "short_name": "497",
-         "types": [
-            "street_number"
-         ]
-      },
-      {
-         "long_name": "Rua Croata",
-         "short_name": "R. Croata",
+         "long_name": "Rua Marcelo Ferreira Albiere",
+         "short_name": "R. Marcelo Ferreira Albiere",
          "types": [
             "route"
          ]
       },
       {
-         "long_name": "Parque Universitario de Viracopos",
-         "short_name": "Parque Universitario de Viracopos",
+         "long_name": "Parque Residencial Vila União",
+         "short_name": "Parque Res. Vila União",
          "types": [
             "political",
             "sublocality",
@@ -48,44 +41,44 @@
          ]
       },
       {
-         "long_name": "13056-469",
-         "short_name": "13056-469",
+         "long_name": "13060-737",
+         "short_name": "13060-737",
          "types": [
             "postal_code"
          ]
       }
    ],
-   "formatted_address": "R. Croata,497 - Parque Universitario de Viracopos, Campinas - SP,13056-469, Brazil",
+   "formatted_address": "R. Marcelo Ferreira Albiere - Parque Res. Vila União, Campinas - SP,13060-737, Brazil",
    "geometry": {
       "bounds": {
          "northeast": {
-            "lat": -22.9658854,
-            "lng": -47.1512586
+            "lat": -22.9365711,
+            "lng": -47.1176371
          },
          "southwest": {
-            "lat": -22.9659971,
-            "lng": -47.1514438
+            "lat": -22.9399911,
+            "lng": -47.1228893
          }
       },
       "location": {
-         "lat": -22.9659515,
-         "lng": -47.151348
+         "lat": -22.9384431,
+         "lng": -47.1205212
       },
-      "location_type": "ROOFTOP",
+      "location_type": "GEOMETRIC_CENTER",
       "viewport": {
          "northeast": {
-            "lat": -22.96459226970849,
-            "lng": -47.14995816970849
+            "lat": -22.9365711,
+            "lng": -47.1176371
          },
          "southwest": {
-            "lat": -22.9672902302915,
-            "lng": -47.15265613029149
+            "lat": -22.9399911,
+            "lng": -47.1228893
          }
       }
    },
    "partial_match": true,
-   "place_id": "ChIJy46j0Da2yJQR7ViUjMP1aRs",
+   "place_id": "ChIJw2v7wTnIyJQRaGsD8TZggGs",
    "types": [
-      "premise"
+      "route"
    ]
 }

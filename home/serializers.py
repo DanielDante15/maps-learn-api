@@ -20,8 +20,6 @@ class EmpresaRelatedField(serializers.RelatedField):
         return Empresa.objects.get(name=data)
 
 class MotoristaSerializer(serializers.ModelSerializer):
-    endereco = serializers.CharField(source='endereco.logradouro',read_only=True)
-    lista_empresas = serializers.StringRelatedField(many=True, read_only=True)
     class Meta:
         model = Motorista
         fields = '__all__'
@@ -36,9 +34,3 @@ class ClienteSerializer(serializers.ModelSerializer):
         model = Cliente
         fields = ['id','razao_social']
         read_only_fields = [('id')]
-
-class EntregaSerializer(serializers.ModelSerializer):
-   
-    class Meta:
-        model = Entrega
-        fields = ['id','endereco','cliente','nota_fiscal']

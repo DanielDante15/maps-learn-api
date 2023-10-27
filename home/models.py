@@ -32,7 +32,7 @@ class Cliente(models.Model):
 class Endereco(models.Model):
     cep = models.CharField(max_length=12, verbose_name='CEP',null=True)
     logradouro = models.CharField(max_length=50, verbose_name="Logradouro")
-    complemento = models.CharField(max_length=50, verbose_name="Compemento",null=True,default='')
+    complemento = models.CharField(max_length=50, verbose_name="Compemento",null=True,default='',blank=True)
     bairro = models.CharField(max_length=50, verbose_name="Bairro")
     localidade = models.CharField(max_length=20, verbose_name="Localidade")
     uf = models.CharField(max_length=20, verbose_name="UF")
@@ -42,7 +42,7 @@ class Endereco(models.Model):
     cliente = models.ForeignKey(Cliente,verbose_name="Cliente",on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.logradouro
+        return f"{self.logradouro}, {self.num_casa}, {self.bairro}, {self.localidade}"
     
 class Motorista(models.Model):
     GEN_MASCULINO = 'M'
@@ -57,7 +57,7 @@ class Motorista(models.Model):
     cpf = models.CharField(max_length=11, verbose_name="CPF")
     contato = models.CharField(max_length=15, verbose_name="Contato")
     endereco = models.ForeignKey(Endereco, on_delete=models.PROTECT, verbose_name="Endereço")
-
+    entrega = models.ManyToManyField(Endereco,related_name='enderecos_entrega',blank=True,null=True)
     def __str__(self):
         return self.nome
     
@@ -92,7 +92,3 @@ class NotaFiscal(models.Model):
 
         return self.num_doc
     
-class Entrega(models.Model):
-    cliente = models.ForeignKey(Cliente,verbose_name="Cliente",on_delete=models.PROTECT)
-    endereco = models.ForeignKey(Endereco,verbose_name="Endereço",on_delete=models.PROTECT)
-    nota_fiscal = models.ForeignKey(NotaFiscal,verbose_name="Nota Fiscal",on_delete=models.PROTECT)
