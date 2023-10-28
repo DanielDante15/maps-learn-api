@@ -79,10 +79,10 @@ class EnderecoAPIView(ModelViewSet):
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
         else:
+
+
             lat = request.POST.get('latitude')
             lng = request.POST.get('longitude')
-
-    
 
             gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
             reverse_geocode_result = json.dumps(gmaps.reverse_geocode((lat, lng)))
@@ -171,6 +171,7 @@ class ListaEntregaMotoristaView(APIView):
 
 class AreaEntregaAPIView(APIView):
     def get(self, request, entrega_id=None):
+        gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
         coordenadas = []
         if entrega_id is not None:
             try:
@@ -191,10 +192,12 @@ class AreaEntregaAPIView(APIView):
                 centro_x = (esquerda[0] + direita[0]) / 2
                 centro_y = (acima[1] + abaixo[1]) / 2
 
-                raio = max(
-                    np.sqrt((p[0] - centro_x) ** 2 + (p[1] - centro_y) ** 2)
-                    for p in coordenadas
-                ) + 0.006
+                centro = (centro_x,centro_y)
+
+                distancias = [gmaps.distance_matrix(centro, ponto, mode="driving")["rows"][0]["elements"][0]["distance"]["value"] for ponto in coordenadas]
+
+# O raio do círculo será a maior distância
+                raio = max(distancias) / 1000
 
                 return Response({'coordenadas': coordenadas,
                              'centroX': centro_x,
@@ -224,15 +227,18 @@ class AreaEntregaAPIView(APIView):
             centro_x = (esquerda[0] + direita[0]) / 2
             centro_y = (acima[1] + abaixo[1]) / 2
 
-            raio = max(
-                np.sqrt((p[0] - centro_x) ** 2 + (p[1] - centro_y) ** 2)
-                for p in coordenadas
-            ) + 0.006
+            centro = (centro_x,centro_y)
+
+            distancias = [gmaps.distance_matrix(centro, ponto, mode="driving")["rows"][0]["elements"][0]["distance"]["value"] for ponto in coordenadas]
+
+# O raio do círculo será a maior distância
+            raio = max(distancias) / 1000
 
             return Response({'coordenadas': coordenadas,
                              'centroX': centro_x,
                              'centroY': centro_y,
                              'raio': raio}, status=status.HTTP_200_OK)
+
     
     
 

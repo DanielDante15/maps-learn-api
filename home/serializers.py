@@ -5,7 +5,7 @@ from .models import *
 class EnderecoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Endereco
-        fields = ['id','cep','logradouro','complemento','bairro','localidade','uf','num_casa','cliente','latitude','longitude']
+        fields = "__all__"
 
 
 class EmpresaSerializer(serializers.ModelSerializer):
