@@ -171,43 +171,61 @@ class ListaEntregaMotoristaView(APIView):
 
 class AreaEntregaAPIView(APIView):
     def get(self, request, entrega_id=None):
+        coordenadas = []
         if entrega_id is not None:
             try:
-                endereco = Endereco.objects.get(pk=entrega_id)
-                endereco_info = {
-                    'id': endereco.pk,
-                    'latitude': endereco.latitude,
-                    'longitude': endereco.longitude,
-                    # Adicione outros campos relevantes aqui
-                }
-                return Response(endereco_info, status=status.HTTP_200_OK)
-            except Endereco.DoesNotExist:
-                return Response({'msg': 'Endereço não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+                motorista = Motorista.objects.get(id=entrega_id)
+                entregas = motorista.entrega.all()
+
+                for entrega in entregas:
+                    coordenadas.append(
+                    (entrega.latitude,
+                    entrega.longitude,)
+                )
+                
+                esquerda = min(coordenadas, key=lambda p: p[0])
+                direita = max(coordenadas, key=lambda p: p[0])
+                acima = max(coordenadas, key=lambda p: p[1])
+                abaixo = min(coordenadas, key=lambda p: p[1])
+
+                centro_x = (esquerda[0] + direita[0]) / 2
+                centro_y = (acima[1] + abaixo[1]) / 2
+
+                raio = max(
+                    np.sqrt((p[0] - centro_x) ** 2 + (p[1] - centro_y) ** 2)
+                    for p in coordenadas
+                ) + 0.006
+
+                return Response({'coordenadas': coordenadas,
+                             'centroX': centro_x,
+                             'centroY': centro_y,
+                             'raio': raio}, status=status.HTTP_200_OK)
+                    
+            except Motorista.DoesNotExist:
+                return Response({"error": "Motorista não encontrado"}, status=status.HTTP_404_NOT_FOUND)
         else:
-            coordenadas = []
+            
             try:
                 enderecos = Endereco.objects.all()
             except Endereco.DoesNotExist:
                 return Response({'msg': 'Endereços não encontrados.'}, status=status.HTTP_404_NOT_FOUND)
 
             for endereco in enderecos:
-                coordenadas.append({
-                    'id': endereco.pk,
-                    'latitude': endereco.latitude,
-                    'longitude': endereco.longitude,
-                    # Adicione outros campos relevantes aqui
-                })
+                coordenadas.append(
+                    (endereco.latitude,
+                    endereco.longitude,)
+                )
 
-            esquerda = min(coordenadas, key=lambda p: p['latitude'])
-            direita = max(coordenadas, key=lambda p: p['latitude'])
-            acima = max(coordenadas, key=lambda p: p['longitude'])
-            abaixo = min(coordenadas, key=lambda p: p['longitude'])
+            esquerda = min(coordenadas, key=lambda p: p[0])
+            direita = max(coordenadas, key=lambda p: p[0])
+            acima = max(coordenadas, key=lambda p: p[1])
+            abaixo = min(coordenadas, key=lambda p: p[1])
 
-            centro_x = (esquerda['latitude'] + direita['latitude']) / 2
-            centro_y = (acima['longitude'] + abaixo['longitude']) / 2
+            centro_x = (esquerda[0] + direita[0]) / 2
+            centro_y = (acima[1] + abaixo[1]) / 2
 
             raio = max(
-                np.sqrt((p['latitude'] - centro_x) ** 2 + (p['longitude'] - centro_y) ** 2)
+                np.sqrt((p[0] - centro_x) ** 2 + (p[1] - centro_y) ** 2)
                 for p in coordenadas
             ) + 0.006
 
