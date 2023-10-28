@@ -1,13 +1,11 @@
-from django.shortcuts import render
 from rest_framework.viewsets import *
 from rest_framework.status import *
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
-
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
+from rest_framework.views import APIView
 import googlemaps
+import numpy as np
 import json
 from django.conf import settings
 
@@ -159,7 +157,65 @@ class EmpresaAPIView(ModelViewSet):
     queryset = Empresa.objects.all()
     serializer_class = EmpresaSerializer
 
+class ListaEntregaMotoristaView(APIView):
+    def get(self, request, motorista_id):
+        try:
+            motorista = Motorista.objects.get(id=motorista_id)
+        except Motorista.DoesNotExist:
+            return Response({'detail': 'Motorista não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
+        entregas = motorista.entrega.all()  # Obtém todas as entregas relacionadas a esse motorista
+        serializer = EntregaMotoristaSerializer(entregas, many=True)
+        return Response(serializer.data)
+
+
+class AreaEntregaAPIView(APIView):
+    def get(self, request, entrega_id=None):
+        if entrega_id is not None:
+            try:
+                endereco = Endereco.objects.get(pk=entrega_id)
+                endereco_info = {
+                    'id': endereco.pk,
+                    'latitude': endereco.latitude,
+                    'longitude': endereco.longitude,
+                    # Adicione outros campos relevantes aqui
+                }
+                return Response(endereco_info, status=status.HTTP_200_OK)
+            except Endereco.DoesNotExist:
+                return Response({'msg': 'Endereço não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            coordenadas = []
+            try:
+                enderecos = Endereco.objects.all()
+            except Endereco.DoesNotExist:
+                return Response({'msg': 'Endereços não encontrados.'}, status=status.HTTP_404_NOT_FOUND)
+
+            for endereco in enderecos:
+                coordenadas.append({
+                    'id': endereco.pk,
+                    'latitude': endereco.latitude,
+                    'longitude': endereco.longitude,
+                    # Adicione outros campos relevantes aqui
+                })
+
+            esquerda = min(coordenadas, key=lambda p: p['latitude'])
+            direita = max(coordenadas, key=lambda p: p['latitude'])
+            acima = max(coordenadas, key=lambda p: p['longitude'])
+            abaixo = min(coordenadas, key=lambda p: p['longitude'])
+
+            centro_x = (esquerda['latitude'] + direita['latitude']) / 2
+            centro_y = (acima['longitude'] + abaixo['longitude']) / 2
+
+            raio = max(
+                np.sqrt((p['latitude'] - centro_x) ** 2 + (p['longitude'] - centro_y) ** 2)
+                for p in coordenadas
+            ) + 0.006
+
+            return Response({'coordenadas': coordenadas,
+                             'centroX': centro_x,
+                             'centroY': centro_y,
+                             'raio': raio}, status=status.HTTP_200_OK)
+    
     
 
 

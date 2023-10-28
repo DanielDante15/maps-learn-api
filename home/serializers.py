@@ -34,3 +34,9 @@ class ClienteSerializer(serializers.ModelSerializer):
         model = Cliente
         fields = ['id','razao_social']
         read_only_fields = [('id')]
+
+class EntregaMotoristaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Endereco
+        fields = ['id', 'cep', 'logradouro', 'complemento', 'bairro', 'localidade', 'uf', 'num_casa', 'latitude', 'longitude', 'cliente']
+
