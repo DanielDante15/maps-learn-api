@@ -196,7 +196,6 @@ class AreaEntregaAPIView(APIView):
 
                 distancias = [gmaps.distance_matrix(centro, ponto, mode="driving")["rows"][0]["elements"][0]["distance"]["value"] for ponto in coordenadas]
 
-# O raio do círculo será a maior distância
                 raio = max(distancias) / 1000
 
                 return Response({'coordenadas': coordenadas,
@@ -231,7 +230,6 @@ class AreaEntregaAPIView(APIView):
 
             distancias = [gmaps.distance_matrix(centro, ponto, mode="driving")["rows"][0]["elements"][0]["distance"]["value"] for ponto in coordenadas]
 
-# O raio do círculo será a maior distância
             raio = max(distancias) / 1000
 
             return Response({'coordenadas': coordenadas,
