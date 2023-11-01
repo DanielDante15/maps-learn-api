@@ -5,7 +5,7 @@ from .models import *
 
 
 
-admin.site.register(Empresa)
+# admin.site.register(Empresa)
 admin.site.register(Cliente)
 admin.site.register(Motorista)
 admin.site.register(NotaFiscal)

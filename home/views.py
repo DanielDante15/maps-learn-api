@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 import googlemaps
 import numpy as np
 import json
@@ -22,6 +23,10 @@ class EnderecoAPIView(ModelViewSet):
         if cliente_uid:
             queryset = queryset.filter(cliente = cliente_uid)
         return queryset
+    
+    
+    
+
         
 
     def create(self, request, *args, **kwargs):
@@ -127,20 +132,34 @@ class EnderecoAPIView(ModelViewSet):
 
 
 class MotoristaAPIView(ModelViewSet):
-    queryset = Motorista.objects.all()
     serializer_class = MotoristaSerializer
 
-    def adicionar_endereco_a_motorista(self, request, pk):
-        motorista = self.get_object()  # Obtém o objeto Motorista pelo ID (pk) da URL
-        endereco_ids = request.data.get('endereco_ids', [])  # Supondo que você fornece uma lista de IDs de Endereco a serem adicionados
+    def get_queryset(self):
+        queryset = Motorista.objects.all()
+        for motorista in queryset:
+            if motorista:
+                entregas = motorista.entrega.all()  # Use .all() para recuperar todas as entregas relacionadas ao motorista
+                for entrega in entregas:
+                    print(entrega)
 
-        try:
-            enderecos = Endereco.objects.filter(id__in=endereco_ids)  # Obtém os objetos Endereco com base nos IDs fornecidos
-            motorista.entrega.set(enderecos)  # Usa o método .set() para adicionar os objetos Endereco ao campo Many-to-Many entrega
-            return Response({'detail': 'Endereços adicionados com sucesso.'}, status=status.HTTP_200_OK)
-        except Endereco.DoesNotExist:
-            return Response({'detail': 'Um ou mais IDs de Endereco não existem.'}, status=status.HTTP_400_BAD_REQUEST)
+        return queryset
+        
+    
+    def retrieve(self, request, pk=None):
+        motorista = Motorista.objects.filter(id=pk).first()  # Use .first() to get a single object, not a queryset
+        serializer = MotoristaSerializer(motorista)
 
+        if motorista:
+            entrega_serializer = EnderecoSerializer(motorista.entrega.all(), many=True)
+            data = serializer.data
+            data['entrega'] = entrega_serializer.data
+            return Response(data, status=status.HTTP_200_OK)
+           
+        else: 
+            return Response({'detail': 'Motorista not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+  
 class ClienteAPIView(ModelViewSet):
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
@@ -196,7 +215,7 @@ class AreaEntregaAPIView(APIView):
 
                 distancias = [gmaps.distance_matrix(centro, ponto, mode="driving")["rows"][0]["elements"][0]["distance"]["value"] for ponto in coordenadas]
 
-                raio = max(distancias) / 1000
+                raio = max(distancias) * 1000
 
                 return Response({'coordenadas': coordenadas,
                              'centroX': centro_x,
