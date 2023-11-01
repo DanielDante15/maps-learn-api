@@ -10,19 +10,22 @@ class EnderecoSerializer(serializers.ModelSerializer):
 
 class EmpresaSerializer(serializers.ModelSerializer):
     endereco = serializers.CharField(source='endereco.logradouro',read_only=True)
-    motorista = serializers.StringRelatedField(many=True, read_only=True)
     class Meta:
         model = Empresa 
-        fields = ['razao_social','email','endereco','cnpj','username','password','motorista']
-
-class EmpresaRelatedField(serializers.RelatedField):
-    def to_internal_value(self, data):
-        return Empresa.objects.get(name=data)
+        fields = '__all__'
 
 class MotoristaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Motorista
-        fields = '__all__'
+        fields = ['id','username','email','password','cpf','contato','endereco','entrega']
+    def create(self, validated_data):
+        user = Motorista(
+            username=validated_data['username'],
+            email=validated_data['email']
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
 
 class NotaFiscalSerializer(serializers.ModelSerializer):
     class Meta:

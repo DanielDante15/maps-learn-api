@@ -2,16 +2,14 @@ from rest_framework.viewsets import *
 from rest_framework.status import *
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 import googlemaps
-import numpy as np
 import json
-from django.conf import settings
-
-
-
+from django.conf import settings  
+    
 class EnderecoAPIView(ModelViewSet):
     queryset = Endereco.objects.all()
     serializer_class = EnderecoSerializer
@@ -125,28 +123,31 @@ class EnderecoAPIView(ModelViewSet):
             
 
 
-
-            
-
-    
-
-
 class MotoristaAPIView(ModelViewSet):
     serializer_class = MotoristaSerializer
 
+    
     def get_queryset(self):
         queryset = Motorista.objects.all()
+        
         for motorista in queryset:
             if motorista:
-                entregas = motorista.entrega.all()  # Use .all() para recuperar todas as entregas relacionadas ao motorista
+                entregas = motorista.entrega.all() 
                 for entrega in entregas:
                     print(entrega)
 
         return queryset
-        
+    
+    def create(self, request, *args, **kwargs):
+        serializer = MotoristaSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
     def retrieve(self, request, pk=None):
-        motorista = Motorista.objects.filter(id=pk).first()  # Use .first() to get a single object, not a queryset
+        motorista = Motorista.objects.filter(id=pk).first()
         serializer = MotoristaSerializer(motorista)
 
         if motorista:
@@ -183,7 +184,7 @@ class ListaEntregaMotoristaView(APIView):
         except Motorista.DoesNotExist:
             return Response({'detail': 'Motorista não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
-        entregas = motorista.entrega.all()  # Obtém todas as entregas relacionadas a esse motorista
+        entregas = motorista.entrega.all()
         serializer = EntregaMotoristaSerializer(entregas, many=True)
         return Response(serializer.data)
 
