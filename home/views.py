@@ -1,7 +1,6 @@
 from rest_framework.viewsets import *
 from rest_framework.status import *
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 from rest_framework.views import APIView
@@ -9,11 +8,18 @@ from rest_framework.authtoken.models import Token
 import googlemaps
 import json
 from django.conf import settings  
+
+
+from django.contrib.auth import authenticate
+from rest_framework.decorators import api_view,permission_classes
+from django.core.exceptions import ObjectDoesNotExist
+
+        
     
 class EnderecoAPIView(ModelViewSet):
     queryset = Endereco.objects.all()
     serializer_class = EnderecoSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Endereco.objects.all()
@@ -22,10 +28,6 @@ class EnderecoAPIView(ModelViewSet):
             queryset = queryset.filter(cliente = cliente_uid)
         return queryset
     
-    
-    
-
-        
 
     def create(self, request, *args, **kwargs):
         if request.POST.get('latitude') == '' and request.POST.get('longitude') == '':
@@ -77,9 +79,9 @@ class EnderecoAPIView(ModelViewSet):
             serializer = self.serializer_class(data=data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+                return Response(data=serializer.data, status=HTTP_201_CREATED)
             else:
-                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=serializer.errors, status=HTTP_400_BAD_REQUEST)
             
         else:
 
@@ -117,9 +119,9 @@ class EnderecoAPIView(ModelViewSet):
             serializer = self.serializer_class(data=data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+                return Response(data=serializer.data, status=HTTP_201_CREATED)
             else:
-                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(data=serializer.errors, status=HTTP_400_BAD_REQUEST)
             
 
 
@@ -142,8 +144,8 @@ class MotoristaAPIView(ModelViewSet):
         serializer = MotoristaSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     
     def retrieve(self, request, pk=None):
@@ -154,10 +156,10 @@ class MotoristaAPIView(ModelViewSet):
             entrega_serializer = EnderecoSerializer(motorista.entrega.all(), many=True)
             data = serializer.data
             data['entrega'] = entrega_serializer.data
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(data, status=HTTP_200_OK)
            
         else: 
-            return Response({'detail': 'Motorista not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': 'Motorista not found'}, status=HTTP_404_NOT_FOUND)
 
 
   
@@ -182,11 +184,12 @@ class ListaEntregaMotoristaView(APIView):
         try:
             motorista = Motorista.objects.get(id=motorista_id)
         except Motorista.DoesNotExist:
-            return Response({'detail': 'Motorista não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': 'Motorista não encontrado.'}, status=HTTP_404_NOT_FOUND)
 
         entregas = motorista.entrega.all()
         serializer = EntregaMotoristaSerializer(entregas, many=True)
         return Response(serializer.data)
+
 
 
 class AreaEntregaAPIView(APIView):
@@ -221,16 +224,16 @@ class AreaEntregaAPIView(APIView):
                 return Response({'coordenadas': coordenadas,
                              'centroX': centro_x,
                              'centroY': centro_y,
-                             'raio': raio}, status=status.HTTP_200_OK)
+                             'raio': raio}, status=HTTP_200_OK)
                     
             except Motorista.DoesNotExist:
-                return Response({"error": "Motorista não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "Motorista não encontrado"}, status=HTTP_404_NOT_FOUND)
         else:
             
             try:
                 enderecos = Endereco.objects.all()
             except Endereco.DoesNotExist:
-                return Response({'msg': 'Endereços não encontrados.'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'msg': 'Endereços não encontrados.'}, status=HTTP_404_NOT_FOUND)
 
             for endereco in enderecos:
                 coordenadas.append(
@@ -255,7 +258,7 @@ class AreaEntregaAPIView(APIView):
             return Response({'coordenadas': coordenadas,
                              'centroX': centro_x,
                              'centroY': centro_y,
-                             'raio': raio}, status=status.HTTP_200_OK)
+                             'raio': raio}, status=HTTP_200_OK)
 
     
     

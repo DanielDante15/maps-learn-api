@@ -16,5 +16,7 @@ urlpatterns = [
     path('motoristas/<int:motorista_id>/entregas/', ListaEntregaMotoristaView.as_view(), name='motorista-entregas'),
     path('endereco/entregas', AreaEntregaAPIView.as_view(), name='area-entrega'),
     path('endereco/<int:entrega_id>/entregas/', AreaEntregaAPIView.as_view(), name='area-entrega-detail'),
+    # path('login/', user_login, name='login'),
+    # path('logout/', user_logout, name='logout'),
 ]
 
