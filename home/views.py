@@ -1,4 +1,3 @@
-import jwt
 from rest_framework.viewsets import *
 from rest_framework.status import *
 from rest_framework.response import Response
@@ -186,20 +185,26 @@ class MotoristaAPIView(ModelViewSet):
 class ClienteAPIView(ModelViewSet):
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
+    permission_classes = [IsAuthenticated]
+
     
 
 
 class NotaFiscalAPIView(ModelViewSet):
     queryset = NotaFiscal.objects.all()
     serializer_class = NotaFiscalSerializer
+    permission_classes = [IsAuthenticated]
+
 
 
 
 class EmpresaAPIView(ModelViewSet):
     queryset = Empresa.objects.all()
     serializer_class = EmpresaSerializer
+    permission_classes = [IsAuthenticated]
 
 class ListaEntregaMotoristaView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, motorista_id):
         try:
             motorista = Motorista.objects.get(id=motorista_id)
@@ -213,6 +218,7 @@ class ListaEntregaMotoristaView(APIView):
 
 
 class AreaEntregaAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, entrega_id=None):
         gmaps = googlemaps.Client(key= settings.GOOGLE_API_KEY)
         coordenadas = []
